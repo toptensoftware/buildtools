@@ -259,22 +259,26 @@ function dnbuild(config, project)
 	run("dotnet", args);
 }
 
-function dntest(config, project)
+function dnpack(config, project, framework)
 {
-	console.log(`Running tests... (${config})`);
+	console.log(`Packing with dotnet (${config})`);
+	
+	var args = ["pack", "-c", config];
 
-	var args = ["test", "-c", config];
+	if (framework)
+		args.push("-p:TargetFrameworks=" + framework);
+		
 	if (project)
 		args.push(project);
 
 	run("dotnet", args);
 }
 
-function dnpack(config, project)
+function dntest(config, project)
 {
-	console.log(`Building package... (${config})`);
+	console.log(`Running tests... (${config})`);
 
-	var args = ["pack", "-c", config];
+	var args = ["test", "-c", config];
 	if (project)
 		args.push(project);
 
@@ -597,6 +601,7 @@ module.exports = {
 	msbuild: msbuild,	
 	vsbuild: vsbuild,	
 	dnbuild: dnbuild,
+	dnpack: dnpack,
 	dntest: dntest,
 	invoke_devenv: invoke_devenv,
 	invoke_msbuild: invoke_msbuild,
