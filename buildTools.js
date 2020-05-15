@@ -171,12 +171,18 @@ function git_check_internal(folder)
 
 function git_check(folder)
 {
+	if (options.switches.nogit)
+		return;
+
 	if (!git_check_internal(folder))
 		process.exit(7);
 }
 
 function git_tag(folder)
 {
+	if (options.switches.nogit)
+		return;
+
 	var tag = `b${options.version.major}.${options.version.minor}.${options.version.build}`;
 	console.log(`Tagging ${folder ? folder : '.'} as ${tag}`)
 
@@ -444,7 +450,7 @@ function run(cmd, args, cwd)
     if (cwd)
     	opts.cwd = cwd;
 
-    var r = child_process.spawnSync(cmd, args, opts);
+    var r = child_process.spawnSync(cmd, args.map(fixPathForOs), opts);
 
     // Failed to launch
     if (r.error)
@@ -469,6 +475,84 @@ function run(cmd, args, cwd)
 		console.log("\nFailed with exit code", r.status);
 		process.exit(7);
 	}
+}
+
+function parseArgs(cmd)
+{
+	// Already an array?
+	if (Array.isArray(cmd))
+		return cmd;
+
+	// Split command
+	let args = [];
+	let arg = "";
+	let inQuote = false;
+	for (var i=0; i<cmd.length; i++)
+	{
+		if (cmd[i] == '\"')
+		{
+			if (inQuote)
+			{
+				inQuote = false;
+			}
+			else
+			{
+				inQuote = true;
+			}
+			continue;
+		}
+
+		if (!inQuote && cmd[i] == ' ' || cmd[i] == '\t')
+		{
+			if (arg.length > 0)
+			{
+				args.push(arg);
+				arg = "";
+			}
+		}
+		else
+		{
+			arg += cmd[i];
+		}
+	}
+
+	if (arg.length > 0)
+		args.push(arg);
+
+	return args;
+}
+
+var _cli_cwd;
+
+// Set cwd for the next cli command
+function cli_cwd(cwd)
+{
+	_cli_cwd = cwd;
+}
+
+// Arguments to the function can be:
+// 1. Space separated strings using double quotes for spaces
+// 2. An array (which won't be parsed at all)
+// All parse args are concatenated, first is used as command
+// To change cwd, use the cli_cwd command above
+function cli()
+{
+	// Parse args
+	var args = [];
+	for (var i = 0; i < arguments.length; i++) 
+	{
+		args = args.concat(parseArgs(arguments[i]));
+	}
+
+	// First arg is the command
+	var cmd = args.shift();
+
+	// Run the command
+	var ret = run(cmd, args, _cli_cwd);
+
+	// Clear the cwd
+	_cli_cwd = null;
+	return ret;
 }
 
 function getEnv(name, defVal)
@@ -615,6 +699,8 @@ module.exports = {
 	copy: copy,
 	copyDir: copyDir,
 	run: run,
+	cli_cwd: cli_cwd,
+	cli: cli,
 	rmdir: rmdir,
 	mkdirp: mkdirp,
 	prompt: prompt,
