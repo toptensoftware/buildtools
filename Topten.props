@@ -34,4 +34,8 @@
       <None Include="../buildtools/nuget-icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\**" />
+  </ItemGroup>
+
 </Project>
