@@ -416,7 +416,11 @@ for (var i=0; i<process.argv.length; i++)
 	}
 }
 
-
+if (options.clockver)
+{
+	clock_version();
+	process.exit(0);
+}
 
 module.exports = {
 	options: options,
