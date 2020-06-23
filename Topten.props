@@ -13,8 +13,9 @@
     <Authors>Topten Software</Authors>
     <Company>Topten Software</Company>
     <TtsCodeSign>False</TtsCodeSign>
-    <TtsXmlDoc>False</TtsXmlDoc>
     <TtsInheritDoc>True</TtsInheritDoc>
+    <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,11 +26,7 @@
     <Exec Command="ttssign $(TargetDir)$(TargetFileName)" />
   </Target>
 
-  <PropertyGroup Condition="$(TtsXmlDoc)">
-    <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <Target Name="InheritDoc" AfterTargets="PostBuildEvent" Condition="$(TtsXmlDoc) And $(TtsInheritDoc)">
+  <Target Name="InheritDoc" AfterTargets="PostBuildEvent" Condition="$(GenerateDocumentationFile) And $(TtsInheritDoc)">
     <Exec Command="inheritdoc -b $(OutputPath) -f $(AssemblyName).xml --overwrite" />
   </Target>
 
