@@ -142,8 +142,12 @@ function git_tag(folder)
 }
 
 
+
 function fixPathForOs(path)
 {
+	if (options.disablePathFix)
+		return path;
+	
 	if (os.platform() == "win32")
 		return path.replace(/\//g, '\\');
 	else
