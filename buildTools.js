@@ -147,11 +147,13 @@ function fixPathForOs(path)
 {
 	if (options.disablePathFix)
 		return path;
-	
+
+	// Don't replace / at the very start of an argument as it's probably a Windows
+	// style command line switch.
 	if (os.platform() == "win32")
-		return path.replace(/\//g, '\\');
+		return path[0] + path.substring(1).replace(/\//g, '\\');
 	else
-		return path.replace(/\\/g, '/');
+		return path[0] + path.substring(1).replace(/\\/g, '/');
 }
 
 // run_args a command
@@ -420,6 +422,50 @@ for (var i=0; i<process.argv.length; i++)
 	}
 }
 
+function msbuild(sln, proj, platform, config)
+{
+	console.log(`Building ${proj} (${config}|${platform})`);
+
+	if (proj != "*")
+	{
+		invoke_msbuild([
+			sln, 
+			`/t:${proj.replace(/\./g, '_')}`,
+			`/p:Configuration=${config}`,
+            `/p:Platform=${platform}`, 
+			`/verbosity:minimal`
+			]);
+	}
+	else
+	{
+		invoke_msbuild([
+			sln, 
+			`/p:Configuration=${config}`,
+			`/p:Platform=${platform}`,
+			`/verbosity:minimal`
+			]);
+	}
+}
+
+// Invoke msbuild
+function invoke_msbuild(args)
+{
+	run_args("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
+}
+
+
+// Store symbols
+function symstore(filespec)
+{
+	run_args(path.join(__dirname, "symstore.exe"), [
+		"add", "/r", "/f",
+		filespec,
+		"/s", options.symStorePath,
+		"/t", `${options.version.productName} ${options.version.major}.${options.version.minor}`,
+		"/v", `Build ${options.version.build}`
+	]);
+}
+
 if (options.clockver)
 {
 	clock_version();
@@ -438,4 +484,5 @@ module.exports = {
 	upload: upload,
 	open_url: open_url,
 	validate_json: validate_json,
+	msbuild: msbuild,
 }
