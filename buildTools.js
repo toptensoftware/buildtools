@@ -143,6 +143,7 @@ function git_tag(folder)
 
 
 
+/*
 function fixPathForOs(path)
 {
 	if (options.disablePathFix)
@@ -155,9 +156,15 @@ function fixPathForOs(path)
 	else
 		return path[0] + path.substring(1).replace(/\\/g, '/');
 }
+*/
+
+function run_args(cmd, args, cwd)
+{
+	return run_core(cmd, args, { cwd: cwd });
+}
 
 // run_args a command
-function run_args(cmd, args, cwd)
+function run_core(cmd, args, opts)
 {
 	function escapeArg(x)  
 	{
@@ -175,14 +182,11 @@ function run_args(cmd, args, cwd)
         console.log(escapeArg(cmd), args.map(escapeArg).join(" "));
     }
 
-    var opts = {
+    var opts = Object.assign({
     	stdio: 'inherit'
-    }
+    }, opts);
 
-    if (cwd)
-    	opts.cwd = cwd;
-
-    var r = child_process.spawnSync(cmd, args.map(fixPathForOs), opts);
+    var r = child_process.spawnSync(cmd, args, opts);
 
     // Failed to launch
     if (r.error)
@@ -197,7 +201,7 @@ function run_args(cmd, args, cwd)
     }
 
     // Failed exit code?
-	if (r.status != 0)
+	if (r.status != 0 && !opts.ignoreExitCode)
 	{
 		if (!options.verbose)
 		{
@@ -207,6 +211,8 @@ function run_args(cmd, args, cwd)
 		console.log("\nFailed with exit code", r.status);
 		process.exit(7);
 	}
+
+	return r.status;
 }
 
 function parseArgs(cmd)
@@ -478,6 +484,7 @@ module.exports = {
 	git_check: git_check,
 	git_tag: git_tag,
 	run_args: run_args,
+	run_core: run_core,
 	cwd: cwd,
 	run: run,
 	prompt: prompt,
