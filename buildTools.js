@@ -325,7 +325,7 @@ function prompt(message)
 
 function upload(localfile, remotefile, chmod)
 {
-	run_args("c:\\cygwin64\\bin\\scp", [
+	run_args("scp", [
 		localfile,
 		remotefile
 	]);
@@ -333,7 +333,7 @@ function upload(localfile, remotefile, chmod)
 	if (chmod)
 	{
 		var parts = remotefile.split(':');
-		run_args("c:\\cygwin64\\bin\\ssh", [
+		run_args("ssh", [
 			parts[0],
 			"chmod", chmod, parts[1]
 		]);
