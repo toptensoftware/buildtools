@@ -184,7 +184,7 @@ function run_core(cmd, args, opts)
 
     var opts = Object.assign({
     	stdio: 'inherit',
-		shell: true,
+		shell: cmd.endsWith(".bat"),
     }, opts);
 
     var r = child_process.spawnSync(cmd, args, opts);
