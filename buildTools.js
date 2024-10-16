@@ -183,7 +183,8 @@ function run_core(cmd, args, opts)
     }
 
     var opts = Object.assign({
-    	stdio: 'inherit'
+    	stdio: 'inherit',
+		shell: true,
     }, opts);
 
     var r = child_process.spawnSync(cmd, args, opts);
