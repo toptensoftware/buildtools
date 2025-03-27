@@ -457,7 +457,8 @@ function msbuild(sln, proj, platform, config)
 // Invoke msbuild
 function invoke_msbuild(args)
 {
-	run_args("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
+	//run_args("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
+	run_args("C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
 }
 
 
