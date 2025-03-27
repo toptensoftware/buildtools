@@ -536,7 +536,7 @@ class Runner
 				console.log(`Running vcvarsall for ${platform}`);
 
 			// Create a batch file to capture the vs environment
-			var batchScript = `@call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" ${platform} > nul\n`;
+			var batchScript = `@call "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsall.bat" ${platform} > nul\n`;
 			batchScript += `@set > ${envFile}`;
 
 			// Save the batch file
