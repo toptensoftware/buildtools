@@ -98,7 +98,7 @@ function git_check_internal(folder)
 
 	// Get branch name
 	var m = /^On branch (.*)/g.exec(r.stdout);
-	console.log(`${folder} => ${m[1]}`);
+	console.log(`${folder} => ${m ? m[1] : "detached head"}`);
 
 	return true;
 }
