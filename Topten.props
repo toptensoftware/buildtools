@@ -25,6 +25,13 @@
     <Exec Command="ttssign $(TargetDir)$(TargetFileName)" />
   </Target>
 
+  <Target Name="InheritDoc" AfterTargets="PostBuildEvent" Condition="$(GenerateDocumentationFile) And $(TtsInheritDoc)">
+    <PropertyGroup>
+      <_InheritDocPath>$([MSBuild]::NormalizePath($(OutputPath)).TrimEnd('\'))</_InheritDocPath>
+    </PropertyGroup>
+    <Exec Command="dotnet &quot;%USERPROFILE%\.dotnet\tools\.store\inheritdoctool\2.5.2\inheritdoctool\2.5.2\tools\netcoreapp3.1\any\InheritDoc.dll&quot; -b &quot;$(_InheritDocPath)&quot; -f $(AssemblyName).xml --overwrite" />
+  </Target>
+
   <ItemGroup>
       <None Include="../buildtools/nuget-icon.png" Pack="true" PackagePath=""/>
   </ItemGroup>
