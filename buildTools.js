@@ -455,7 +455,7 @@ function msbuild(sln, proj, platform, config)
 }
 
 
-let msBuildPath = 
+let msBuildPath = null;
 
 function setMSBuildPath(value)
 {
@@ -468,6 +468,7 @@ function setMSBuildPath(value)
 
 	msBuildPath = value;
 }
+setMSBuildPath("2022");
 
 // Invoke msbuild
 function invoke_msbuild(args)
@@ -508,4 +509,5 @@ module.exports = {
 	open_url: open_url,
 	validate_json: validate_json,
 	msbuild: msbuild,
+	setMSBuildPath: setMSBuildPath,
 }
