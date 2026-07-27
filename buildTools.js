@@ -454,11 +454,25 @@ function msbuild(sln, proj, platform, config)
 	}
 }
 
+
+let msBuildPath = 
+
+function setMSBuildPath(value)
+{
+	if (value == "2019")
+		value = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\msbuild.exe";
+	if (value == "2022")
+		value = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\msbuild.exe";
+	if (value == "2026")
+		value = "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders\\MSBuild\\Current\\Bin\\MSBuild.exe"
+
+	msBuildPath = value;
+}
+
 // Invoke msbuild
 function invoke_msbuild(args)
 {
-	//run_args("C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
-	run_args("C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\msbuild.exe", args);
+	run_args(msBuildPath, args);
 }
 
 
