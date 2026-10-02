@@ -13,6 +13,7 @@
     <Authors>Topten Software</Authors>
     <Company>Topten Software</Company>
     <TtsCodeSign>False</TtsCodeSign>
+    <TtsInheritDoc>False</TtsInheritDoc>
     <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
   </PropertyGroup>
